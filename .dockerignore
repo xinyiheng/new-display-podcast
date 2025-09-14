@@ -1,0 +1,32 @@
+# Ignore VCS
+.git
+.gitignore
+
+# Python caches
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# OS files
+.DS_Store
+
+# Tests and docs (if any)
+tests/
+docs/
+*.log
+
+# Large local data not needed in image
+static_files/
+
+# Node-related (just in case)
+node_modules/
+
+# Temp files
+*.tmp
+*.temp
