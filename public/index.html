@@ -126,6 +126,30 @@
         </div>
     </footer>
 
+    <!-- 文稿弹窗 -->
+    <div id="transcript-modal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">播客文稿</h3>
+                <div class="modal-controls">
+                    <button id="modal-fullscreen-btn" class="modal-btn" title="全屏">
+                        <span class="btn-icon">⛶</span>
+                    </button>
+                    <button id="modal-close-btn" class="modal-btn" title="关闭">
+                        <span class="btn-icon">✕</span>
+                    </button>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="modal-loading">
+                    <div class="spinner"></div>
+                    <p>正在加载文稿...</p>
+                </div>
+                <iframe id="transcript-iframe" class="transcript-iframe" style="display: none;"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
