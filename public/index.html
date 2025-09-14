@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出版电台 - 每日出版行业资讯播客</title>
+    <meta name="description" content="专注出版行业的每日播客，为您带来最新的行业动态、深度分析和专业见解。">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="favicon.ico">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>📻 出版电台</h1>
+                <p>每日出版行业资讯播客</p>
+            </div>
+            <nav class="nav">
+                <a href="#latest">最新播客</a>
+                <a href="#archive">往期回顾</a>
+                <a href="#about">关于我们</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main">
+        <div class="container">
+            <!-- 最新播客展示 -->
+            <section id="latest" class="latest-episode">
+                <h2>🎧 最新一期</h2>
+                <div class="episode-card featured" id="latest-episode">
+                    <div class="episode-info">
+                        <h3 class="episode-title">正在加载最新播客...</h3>
+                        <p class="episode-date">加载中...</p>
+                        <p class="episode-description">正在获取最新播客内容...</p>
+                    </div>
+                    <div class="episode-controls">
+                        <audio controls class="audio-player">
+                            <source src="" type="audio/mpeg">
+                            您的浏览器不支持音频播放。
+                        </audio>
+                        <div class="episode-actions">
+                            <a href="#" class="btn btn-primary transcript-btn" target="_blank">📄 查看文稿</a>
+                            <a href="#" class="btn btn-secondary download-btn" download>⬇️ 下载音频</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 播客列表 -->
+            <section id="archive" class="episodes-list">
+                <div class="section-header">
+                    <h2>📚 往期回顾</h2>
+                    <div class="filter-controls">
+                        <input type="text" id="search-input" placeholder="搜索播客内容..." class="search-input">
+                        <select id="date-filter" class="date-filter">
+                            <option value="">全部时间</option>
+                            <option value="7">最近7天</option>
+                            <option value="30">最近30天</option>
+                            <option value="90">最近3个月</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="episodes-grid" id="episodes-container">
+                    <!-- 播客列表将通过JavaScript动态加载 -->
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>正在加载播客列表...</p>
+                    </div>
+                </div>
+
+                <!-- 加载更多按钮 -->
+                <div class="load-more-container">
+                    <button id="load-more-btn" class="btn btn-outline">加载更多</button>
+                </div>
+            </section>
+
+            <!-- 统计信息 -->
+            <section class="stats">
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-episodes">-</div>
+                        <div class="stat-label">总播客数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="total-duration">-</div>
+                        <div class="stat-label">总时长</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="last-update">-</div>
+                        <div class="stat-label">最后更新</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>关于出版电台</h4>
+                    <p>专注于出版行业的专业播客，每日为您带来最新的行业资讯、深度分析和专业见解。</p>
+                </div>
+                <div class="footer-section">
+                    <h4>订阅方式</h4>
+                    <div class="subscribe-links">
+                        <a href="#" class="subscribe-link">🎵 Apple Podcasts</a>
+                        <a href="#" class="subscribe-link">🎧 Spotify</a>
+                        <a href="#" class="subscribe-link">📱 小宇宙</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>联系我们</h4>
+                    <p>Email: contact@podcast.example.com</p>
+                    <p>微信公众号: 出版电台</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 出版电台. All rights reserved. | 自动更新于 <span id="auto-update-time">-</span></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>

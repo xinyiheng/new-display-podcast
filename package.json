@@ -1,0 +1,14 @@
+{
+  "name": "podcast-display",
+  "version": "1.0.0",
+  "description": "Beautiful podcast display website with auto-update from GitHub",
+  "main": "app.py",
+  "scripts": {
+    "dev": "python app.py",
+    "build": "echo 'No build needed'",
+    "start": "python app.py"
+  },
+  "keywords": ["podcast", "display", "github", "webhook", "flask"],
+  "author": "Your Name",
+  "license": "MIT"
+}
