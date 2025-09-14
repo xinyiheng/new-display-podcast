@@ -3,7 +3,7 @@ const CONFIG = {
     // 使用本站的API端点获取数据
     DATA_SOURCE: '/api/podcasts',
     // 播客文件基础URL
-    BASE_URL: 'https://pod.zeabur.app',
+    BASE_URL: 'https://xinyiheng.github.io/newpody',
     // 每页显示的播客数量
     EPISODES_PER_PAGE: 6
 };
