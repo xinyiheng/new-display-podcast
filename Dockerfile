@@ -24,4 +24,4 @@ ENV PYTHONUNBUFFERED=1
 ENV PORT=8080
 
 # 启动应用
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "4", "--timeout", "120", "app:app"]
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-8080} --workers 4 --timeout 120 app:app"]
