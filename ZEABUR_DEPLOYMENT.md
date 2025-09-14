@@ -1,147 +1,163 @@
 # Zeabur 部署指南
 
-## 概述
-这个播客展示网站部署到 Zeabur 平台后，可以通过 GitHub Webhook 实现自动更新。当 `https://xinyiheng.github.io/newpody` 项目更新时，Zeabur 上的展示网站会自动同步更新内容。
+## 🚀 快速部署
 
-## 部署步骤
+### 1. 推送代码到 GitHub
+```bash
+git add .
+git commit -m "添加 Zeabur 部署配置"
+git push origin main
+```
 
-### 1. 准备项目
-确保你的项目代码已经推送到 GitHub 仓库。
+### 2. 在 Zeabur 创建项目
+1. 登录 [Zeabur 控制台](https://zeabur.com)
+2. 点击 "New Project"
+3. 选择 "Deploy from GitHub"
+4. 选择你的代码仓库
+5. 选择 `main` 分支
 
-### 2. Zeabur 部署配置
-
-1. **登录 Zeabur**
-   - 访问 [zeabur.com](https://zeabur.com)
-   - 使用 GitHub 账号登录
-
-2. **创建新项目**
-   - 点击 "New Project"
-   - 选择 "Import from GitHub"
-   - 选择你的播客展示项目仓库
-   - 选择 `main` 分支
-
-3. **配置部署设置**
-   - **Framework**: Python
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `python app.py`
-   - **Port**: 8080 (自动检测)
-
-### 3. 设置环境变量
+### 3. 配置环境变量
 在 Zeabur 项目设置中添加以下环境变量：
 
 ```bash
-# 数据源配置
+# ===== 基础配置 =====
+PORT=8080
+FLASK_ENV=production
+PYTHON_VERSION=3.11
+
+# ===== 数据源配置 =====
 DATA_SOURCE=https://xinyiheng.github.io/newpody/podcast_index.json
 BACKUP_DATA_SOURCE=https://raw.githubusercontent.com/xinyiheng/newpody/gh-pages/podcast_index.json
 BASE_URL=https://xinyiheng.github.io/newpody
 
-# 安全配置 (推荐)
+# ===== Webhook 配置 =====
 GITHUB_WEBHOOK_SECRET=your_generated_secret_here
 
-# 缓存配置 (可选)
+# ===== 缓存配置 =====
 CACHE_DURATION=3600
-PORT=8080
+
+# ===== 持久化存储配置 =====
+USE_PERSISTENT_STORAGE=true
+PERSISTENT_STORAGE=/tmp/podcast_files
+AUTO_CLEANUP_DAYS=30
+STORAGE_WARNING_THRESHOLD=90
 ```
 
-### 4. 生成 Webhook 密钥
-在本地终端生成安全密钥：
+## 📋 部署文件说明
+
+### 配置文件
+- **`zeabur.yml`**: 主要的 Zeabur 配置文件
+- **`.zeabur/config.yml`**: 详细的 Zeabur 配置
+- **`Procfile`**: Heroku 风格的启动命令文件
+- **`deploy.sh`**: 部署脚本
+- **`requirements.txt`**: Python 依赖包列表
+
+### 应用文件
+- **`app.py`**: Flask 应用主文件
+- **`package.json`**: 项目信息和脚本配置
+- **`public/`**: 静态文件目录
+
+## 🔧 部署检测功能
+
+应用已内置 Zeabur 环境检测：
+
+```python
+# 自动检测 Zeabur 环境
+if 'ZEABUR' in os.environ:
+    print("🚀 检测到 Zeabur 环境")
+    USE_PERSISTENT_STORAGE = True
+    PERSISTENT_STORAGE = '/tmp/podcast_files'
+```
+
+## 📊 部署成功验证
+
+部署完成后，访问以下端点验证：
+
+### 1. 健康检查
 ```bash
-openssl rand -hex 20
-# 输出示例: a1b2c3d4e5f6789012345678901234567890abcd
+curl https://your-app.zeabur.app/api/status
 ```
 
-## GitHub Webhook 设置
+### 2. 文件存储状态
+```bash
+curl https://your-app.zeabur.app/api/files/storage
+```
 
-### 在 newpody 项目中设置 Webhook
+### 3. 播客数据
+```bash
+curl https://your-app.zeabur.app/api/podcasts
+```
 
-1. **进入 newpody 仓库设置**
-   - 打开 `https://github.com/xinyiheng/newpody`
-   - 点击 "Settings" → "Webhooks"
-   - 点击 "Add webhook"
+## ⚠️ 常见问题
 
-2. **配置 Webhook**
-   - **Payload URL**: `https://your-zeabur-app-url.zeabur.app/api/webhook`
-   - **Content type**: `application/json`
-   - **Secret**: 输入你在 Zeabur 中设置的 `GITHUB_WEBHOOK_SECRET`
-   - **Which events would you like to trigger this webhook?**:
-     - 选择 "Just the push event"
-   - **Active**: ✓ 勾选
+### 1. 部署失败
+- 检查 `requirements.txt` 中的包版本是否兼容
+- 确保所有配置文件格式正确
+- 查看 Zeabur 构建日志
 
-3. **完成设置**
-   - 点击 "Add webhook"
-   - 测试 Webhook 是否工作正常
+### 2. 环境变量问题
+- 确保所有必需的环境变量都已设置
+- 检查变量值是否正确（特别是 URL）
 
-## 自动更新机制
+### 3. 文件权限问题
+- 确保应用有权限写入 `/tmp` 目录
+- 检查持久化存储配置
 
-### 工作流程
-1. 当 `newpody` 项目有新的推送 (push)
-2. GitHub 向 Zeabur 应用发送 Webhook
-3. Zeabur 应用接收并验证 Webhook
-4. 清除数据缓存，强制从 GitHub Pages 重新获取数据
-5. 访问者看到最新的播客内容
+### 4. 端口问题
+- 确保应用监听 `0.0.0.0:8080`
+- 检查 Zeabur 的端口映射配置
 
-### 监控和调试
+## 🚨 监控和日志
 
-1. **检查 Webhook 状态**
-   ```bash
-   curl https://your-app.zeabur.app/api/status
-   ```
+### 查看日志
+```bash
+# 在 Zeabur 控制台查看应用日志
+# 或者通过 API 访问
+curl https://your-app.zeabur.app/api/status
+```
 
-2. **测试 Webhook 端点**
-   ```bash
-   curl https://your-app.zeabur.app/api/webhook
-   ```
+### 监控指标
+- CPU 使用率
+- 内存使用率
+- 响应时间
+- 错误率
 
-3. **查看日志**
-   - 在 Zeabur 控制台查看应用日志
-   - 检查 Webhook 请求和响应
+## 🔁 自动更新
 
-## 故障排除
+项目已配置 GitHub Webhook，当 GitHub 仓库更新时：
 
-### 常见问题
+1. GitHub 发送 webhook 通知
+2. Zeabur 自动重新部署
+3. 应用自动获取最新播客数据
+4. 文件缓存自动更新
 
-1. **Webhook 验证失败**
-   - 确保 `GITHUB_WEBHOOK_SECRET` 在 GitHub 和 Zeabur 中完全一致
-   - 检查 Secret 是否包含特殊字符
+## 🎯 性能优化
 
-2. **数据更新延迟**
-   - 检查缓存设置 `CACHE_DURATION`
-   - 手动触发 Webhook 测试
+### 1. 持久化存储
+使用 `/tmp/podcast_files` 目录存储文件，Zeabur 会保持数据持久化。
 
-3. **CORS 错误**
-   - 确保 Webhook 端点正确处理 CORS
-   - 检查请求头设置
+### 2. 缓存策略
+- 数据缓存：1小时
+- 文件缓存：永久（除非手动清理）
+- 自动清理：30天前的文件
 
-4. **数据源连接失败**
-   - 验证 `DATA_SOURCE` 和 `BACKUP_DATA_SOURCE` URL 可访问性
-   - 检查 GitHub Pages 是否正常工作
+### 3. 负载均衡
+- 使用 gunicorn 多 worker 进程
+- 每个 worker 处理 4 个并发请求
+- 超时时间：120秒
 
-### 性能优化
+## ✅ 部署检查清单
 
-1. **缓存策略**
-   - 默认缓存 1 小时 (3600 秒)
-   - 可根据更新频率调整 `CACHE_DURATION`
-
-2. **备用数据源**
-   - 主数据源失败时自动切换到备用数据源
-   - 确保两个数据源都可用
-
-## 安全建议
-
-1. **启用 Webhook 验证**
-   - 始终设置 `GITHUB_WEBHOOK_SECRET`
-   - 定期更换密钥
-
-2. **监控访问**
-   - 监控 Webhook 请求频率
-   - 设置异常告警
-
-3. **定期更新**
-   - 保持依赖包最新版本
-   - 定期检查和更新配置
-
----
+- [ ] GitHub 仓库已推送代码
+- [ ] Zeabur 项目已创建
+- [ ] 环境变量已配置
+- [ ] 域名已设置
+- [ ] HTTPS 已启用
+- [ ] 健康检查通过
+- [ ] 文件存储正常
+- [ ] 播客数据加载正常
+- [ ] Webhook 已配置
 
 **部署完成！** 🎉
 
-你的播客展示网站现在已部署到 Zeabur，并且会在 newpody 项目更新时自动同步内容。
+现在你的播客展示应用已成功部署到 Zeabur，可以正常使用了！

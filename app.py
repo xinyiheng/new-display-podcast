@@ -41,6 +41,12 @@ FILE_STORAGE = {
 PERSISTENT_STORAGE = os.environ.get('PERSISTENT_STORAGE', '/tmp/podcast_files')
 USE_PERSISTENT_STORAGE = os.environ.get('USE_PERSISTENT_STORAGE', 'true').lower() == 'true'
 
+# Zeabur 特定配置
+if 'ZEABUR' in os.environ:
+    print("🚀 检测到 Zeabur 环境")
+    USE_PERSISTENT_STORAGE = True
+    PERSISTENT_STORAGE = '/tmp/podcast_files'
+
 # 确保文件存储目录存在
 def ensure_storage_directories():
     """确保文件存储目录存在"""
@@ -559,9 +565,23 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8080))
     host = '0.0.0.0'
 
+    # 检测运行环境
+    env = os.environ.get('FLASK_ENV', 'development')
+    is_zeabur = 'ZEABUR' in os.environ
+
     print(f"🎧 播客展示应用启动")
     print(f"📡 监听地址: {host}:{port}")
+    print(f"🌍 环境: {env}")
+    if is_zeabur:
+        print(f"🚀 部署平台: Zeabur")
     print(f"🔗 数据源: {CONFIG['DATA_SOURCE']}")
     print(f"📁 文件存储目录: {FILE_STORAGE['base_dir']}")
+    print(f"💾 持久化存储: {'启用' if USE_PERSISTENT_STORAGE else '禁用'}")
 
-    app.run(host=host, port=port, debug=False)
+    # 生产环境使用 gunicorn，开发环境使用 Flask
+    if env == 'production' or is_zeabur:
+        print("🔄 生产模式启动")
+        app.run(host=host, port=port, debug=False)
+    else:
+        print("🔧 开发模式启动")
+        app.run(host=host, port=port, debug=True)

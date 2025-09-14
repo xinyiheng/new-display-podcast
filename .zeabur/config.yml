@@ -1,0 +1,63 @@
+# Zeabur 配置文件
+project:
+  name: podcast-display
+  description: "Beautiful podcast display website with auto-update from GitHub"
+  region: hongkong  # 推荐香港节点，对中国用户访问更快
+
+# 应用配置
+app:
+  type: python
+  runtime: python-3.11
+  build:
+    command: "pip install -r requirements.txt"
+  start:
+    command: "gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app"
+
+# 环境变量
+environment:
+  - name: PORT
+    value: "8080"
+  - name: FLASK_ENV
+    value: "production"
+  - name: PYTHON_VERSION
+    value: "3.11"
+  - name: PYTHONUNBUFFERED
+    value: "1"
+
+# 域名配置
+domains:
+  - main: your-app-name.zeabur.app
+    redirects:
+      - www.your-app-name.zeabur.app
+
+# 构建优化
+build:
+  ignore:
+    - "*.log"
+    - "*.tmp"
+    - "__pycache__"
+    - ".git"
+    - "node_modules"
+  cache:
+    - pip
+
+# 健康检查
+health:
+  path: /api/status
+  interval: 30s
+  timeout: 10s
+  retries: 3
+
+# 自动部署
+deploy:
+  automatic: true
+  branch: main
+  delay: 30s
+
+# 监控配置
+monitoring:
+  enabled: true
+  metrics:
+    - cpu
+    - memory
+    - response_time

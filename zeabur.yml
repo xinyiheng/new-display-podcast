@@ -1,0 +1,25 @@
+# Zeabur 部署配置
+app:
+  name: podcast-display
+  type: python
+  buildCommand: "pip install -r requirements.txt"
+  startCommand: "python app.py"
+  port: 8080
+
+# 环境变量配置
+env:
+  - key: PORT
+    value: 8080
+  - key: FLASK_ENV
+    value: production
+  - key: PYTHON_VERSION
+    value: 3.11
+
+# 自动检测 Python 版本
+python:
+  version: 3.11
+
+# 静态文件配置
+static:
+  - path: public
+    url: /
