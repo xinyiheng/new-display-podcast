@@ -8,7 +8,8 @@
     "build": "echo 'No build needed'",
     "start": "python app.py",
     "deploy": "./deploy.sh",
-    "zeabur": "gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app"
+    "zeabur": "gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app",
+    "heroku-postbuild": "pip install -r requirements.txt"
   },
   "keywords": ["podcast", "display", "github", "webhook", "flask", "zeabur"],
   "author": "Your Name",

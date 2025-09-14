@@ -1,25 +1,37 @@
 # Zeabur 部署配置
-app:
-  name: podcast-display
-  type: python
-  buildCommand: "pip install -r requirements.txt"
-  startCommand: "python app.py"
-  port: 8080
+name: podcast-display
 
-# 环境变量配置
-env:
-  - key: PORT
-    value: 8080
-  - key: FLASK_ENV
-    value: production
-  - key: PYTHON_VERSION
-    value: 3.11
+# 框架检测
+framework: python
 
-# 自动检测 Python 版本
-python:
-  version: 3.11
+# 构建配置
+build:
+  command: "pip install -r requirements.txt"
 
-# 静态文件配置
+# 启动配置
+start:
+  command: "gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app"
+
+# 端口配置
+port: 8080
+
+# 运行时配置
+runtime:
+  name: python
+  version: "3.11"
+
+# 环境变量
+environment:
+  - name: PORT
+    value: "8080"
+  - name: FLASK_ENV
+    value: "production"
+  - name: PYTHON_VERSION
+    value: "3.11"
+  - name: PYTHONUNBUFFERED
+    value: "1"
+
+# 静态文件
 static:
   - path: public
     url: /

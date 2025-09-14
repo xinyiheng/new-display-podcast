@@ -1,0 +1,17 @@
+# 简化的 Zeabur 部署配置
+framework: python
+
+# 构建命令
+buildCommand: pip install -r requirements.txt
+
+# 启动命令
+startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 4 --timeout 120 app:app
+
+# 端口
+port: 8080
+
+# 环境变量
+env:
+  PORT: 8080
+  FLASK_ENV: production
+  PYTHONUNBUFFERED: 1
